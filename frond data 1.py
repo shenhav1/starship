@@ -1,16 +1,22 @@
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.dates as mdates
 pd.set_option('display.max_columns', None)
 
+# Create the "starship" folder on the Desktop if it doesn't exist
+desktop_path = r"C:\Users\shenh\Desktop"
+starship_folder = os.path.join(desktop_path, "starship")
+if not os.path.exists(starship_folder):
+    os.makedirs(starship_folder)
 
 # Reading the Excel file
 excel_file_path = r"C:\Users\shenh\Downloads\Frond data 1.xlsx"
 df = pd.read_excel(excel_file_path)
 
-# Saving the file as CSV on the Desktop
-csv_file_path = r"C:\Users\shenh\Desktop\Frond data 1.csv"
+# Saving the file as CSV in the "starship" folder on the Desktop
+csv_file_path = os.path.join(starship_folder, "Frond data 1.csv")
 df.to_csv(csv_file_path, index=False)
 
 print("File has been successfully converted to CSV!")
@@ -31,8 +37,12 @@ df['Date & time'] = pd.to_datetime(df['Date & time'])
 
 df['Date'] = df['Date & time'].dt.date
 df['Time'] = df['Date & time'].dt.time
+
+# Filtering to include only rows where the time is every 4 hours
+df = df[df['Date & time'].dt.hour % 4 == 0]
+
+# Dropping the original 'Date & time' column
 df = df.drop(columns=['Date & time'])
-df = df[df['Time'].astype(str).str.endswith("00:00")]
 
 df = df.round(4)
 df = df.reset_index(drop=True)
@@ -41,7 +51,7 @@ print("Data after all modifications:")
 print(df.head())
 
 # Saving the final cleaned and updated data on the Desktop
-final_csv_file_path = r"C:\Users\shenh\Desktop\Frond data final.csv"
+final_csv_file_path = os.path.join(starship_folder, "Frond data final.csv")
 df.to_csv(final_csv_file_path, index=True)
 
 print(f"Cleaned and updated data saved successfully to {final_csv_file_path}!")
@@ -74,88 +84,10 @@ df = df[(df['D_type_growth_rate'] >= 0) & (df['E_type_growth_rate'] >= 0) &
 print("Growth rate after cleaning:")
 print(df[['Date', 'D_type_growth_rate', 'E_type_growth_rate', '100_growth_rate', '50_growth_rate']])
 
-# First plot - Comparing growth rate between D and E types
-plt.figure(figsize=(12, 6))
+# Saving the table with Date, Time, and growth rates as a CSV file
+growth_rate_csv_path = os.path.join(starship_folder, "Frond growth rates.csv")
+df[['Date', 'Time', 'D_type_growth_rate', 'E_type_growth_rate', '100_growth_rate', '50_growth_rate']].to_csv(growth_rate_csv_path, index=False)
 
-# Plot for D type irrigation avg growth rate
-plt.plot(df['Date'], df['D_type_growth_rate'], label='D Type Growth Rate', color='blue', marker='o')
+print(f"Growth rates with Date and Time have been successfully saved to {growth_rate_csv_path}!")
 
-# Plot for E type irrigation avg growth rate
-plt.plot(df['Date'], df['E_type_growth_rate'], label='E Type Growth Rate', color='orange', marker='x')
-
-# Adding labels to axes
-plt.xlabel('Date')
-plt.ylabel('Growth Rate')
-
-# Adding title to the plot
-plt.title('Growth Rate Comparison: D Type vs E Type Irrigation')
-
-# Rotating the x-axis labels to avoid overlapping
-plt.xticks(rotation=45)
-
-# Adding legend to the plot
-plt.legend()
-
-# Adjusting layout to prevent clipping
-plt.tight_layout()
-
-# Displaying the plot
-plt.show()
-
-# Second plot - Comparing growth rate between 100% and 50% irrigation
-plt.figure(figsize=(12, 6))
-
-# Plot for 100% water growth rate
-plt.plot(df['Date'], df['100_growth_rate'], label='100% Water Growth Rate', color='green', marker='s')
-
-# Plot for 50% water growth rate
-plt.plot(df['Date'], df['50_growth_rate'], label='50% Water Growth Rate', color='red', marker='d')
-
-# Adding labels to axes
-plt.xlabel('Date')
-plt.ylabel('Growth Rate')
-
-# Adding title to the plot
-plt.title('Growth Rate Comparison: 100% Water vs 50% Water')
-
-# Rotating the x-axis labels to avoid overlapping
-plt.xticks(rotation=45)
-
-# Adding legend to the plot
-plt.legend()
-
-# Adjusting layout to prevent clipping
-plt.tight_layout()
-
-# Displaying the plot
-plt.show()
-
-# First plot - Comparison between 100% and 50% water amounts
-plt.figure(figsize=(12, 6))
-plt.plot(df['Date'], df['100% water'], label='100% water')
-plt.plot(df['Date'], df['50% water'], label='50% water')
-plt.xlabel('Date')
-plt.ylabel('Values')
-plt.title('The effect of the amount of water on the growth of the frond')
-plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=30))
-plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=90))
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-plt.xticks(rotation=45)
-plt.legend()
-plt.tight_layout()
-plt.show()
-
-# Second plot - Comparison between irrigation methods (D and E)
-plt.figure(figsize=(12, 6))
-plt.plot(df['Date'], df['D type irrigation avg'], label='D type irrigation avg')
-plt.plot(df['Date'], df['E type irrigation avg'], label='E type irrigation avg')
-plt.xlabel('Date')
-plt.ylabel('Values')
-plt.title('The effect of the irrigation method on the growth of the frond')
-plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=30))
-plt.gca().xaxis.set_minor_locator(mdates.HourLocator(interval=90))
-plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-plt.xticks(rotation=45)
-plt.legend()
-plt.tight_layout()
-plt.show()
+# The rest of the plotting code...

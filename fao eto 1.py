@@ -8,8 +8,8 @@ pd.set_option('display.max_columns', None)
 fao_eto_file_path = r"C:\Users\shenh\Downloads\fao eto1.xlsx"
 fao_eto_df = pd.read_excel(fao_eto_file_path)
 
-# Saving the file as CSV on the Desktop
-csv_file_path = r"C:\Users\shenh\Desktop\fao eto1.csv"
+# Saving the file as CSV in the starship folder on the Desktop
+csv_file_path = r"C:\Users\shenh\Desktop\starship\fao eto1.csv"
 fao_eto_df.to_csv(csv_file_path, index=False)
 
 print("File has been successfully converted to CSV!")
@@ -28,14 +28,14 @@ fao_eto_cleaned[numeric_columns] = scaler.fit_transform(fao_eto_cleaned[numeric_
 print("Data after normalization:")
 print(fao_eto_cleaned.head())
 
-# Saving the normalized file as a new CSV on the Desktop
-final_csv_file_path = r"C:\Users\shenh\Desktop\fao eto final.csv"
+# Saving the normalized file as a new CSV in the starship folder on the Desktop
+final_csv_file_path = r"C:\Users\shenh\Desktop\starship\fao eto final.csv"
 fao_eto_cleaned.to_csv(final_csv_file_path, index=True)
 
 print(f"Cleaned and updated data saved successfully to {final_csv_file_path}!")
 
 # Reading the saved file
-fao_eto_file_path = r"C:\Users\shenh\Desktop\fao eto final.csv"
+fao_eto_file_path = r"C:\Users\shenh\Desktop\starship\fao eto final.csv"
 fao_eto_df = pd.read_csv(fao_eto_file_path)
 
 # Converting 'dt' column to datetime format
@@ -61,8 +61,8 @@ fao_eto_df.index += 1
 # Displaying the modified DataFrame
 print(fao_eto_df.head())
 
-# Saving the table with the new columns on the Desktop
-final_csv_file_path = r"C:\Users\shenh\Desktop\fao eto split final.csv"
+# Saving the table with the new columns in the starship folder on the Desktop
+final_csv_file_path = r"C:\Users\shenh\Desktop\starship\fao eto split final.csv"
 fao_eto_df.to_csv(final_csv_file_path, index=False)
 
 print(f"Data has been successfully saved to {final_csv_file_path}!")
@@ -74,9 +74,8 @@ if 'Unnamed: 0' in fao_eto_df.columns:
 # Displaying the final DataFrame
 print(fao_eto_df.head())
 
-# Saving the final file without the unnamed column on the Desktop
-final_csv_file_path = r"C:\Users\shenh\Desktop\fao eto final without unnamed.csv"
+# Saving the final file without the unnamed column in the starship folder on the Desktop
+final_csv_file_path = r"C:\Users\shenh\Desktop\starship\fao eto final without unnamed.csv"
 fao_eto_df.to_csv(final_csv_file_path, index=False)
 
 print(f"File has been successfully saved without the unnamed column to {final_csv_file_path}!")
-
