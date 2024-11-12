@@ -72,6 +72,8 @@ plt.show()
 df.reset_index(inplace=True)
 
 # Save the cleaned and upgraded DataFrame to a CSV file
-output_path = r"C:\Users\shenh\Desktop\starship\cleaned_stem_dendrometer.csv"
+output_path = r"C:\Users\shenh\Desktop\starship\cleaned_stem_dendometer.csv"
 df.to_csv(output_path, index=False)
+print(f"Daily delta values saved successfully to {output_path}!")
+
 
